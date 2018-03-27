@@ -44,16 +44,19 @@ namespace OracleWPF
                 dataGridOracle.DataContext = null;
 
                 conn.Open();
-                OracleCommand cmd = new OracleCommand();
+                OracleCommand cmd = new OracleCommand() { BindByName = true, CommandType = CommandType.Text } ;
                 cmd.Connection = conn;
                 cmd.CommandText = "select * from pedido";
+                cmd.Parameters.Add(new OracleParameter("filtername",  Filter)); 
 
                 if (Filter != "")
                 {
-                    cmd.CommandText += $" WHERE LOWER(CLIENTE) LIKE LOWER('%{Filter}%')";
+                    cmd.CommandText += $" WHERE LOWER(CLIENTE) LIKE LOWER(:filtername || '%')";
                 }
 
-                cmd.CommandType = CommandType.Text;
+                
+      
+                
                 
 
                 DataSet ds = new DataSet();
@@ -107,6 +110,8 @@ namespace OracleWPF
 
             LoadDatabase(textBoxFiltro.Text);
         }
+
+
 
         #endregion
 
